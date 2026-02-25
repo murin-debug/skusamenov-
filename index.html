@@ -1076,14 +1076,13 @@ async function ocrFromDataUrl(dataUrl, onProgress){
 
 // --- RULE-BASED „ZROZUMITEĽNE“ (bez AI) ---
 function normalizeText(t){
-  return (t||"").replace(/
-/g,"").replace(/[ 	]+
-/g,"
-").replace(/
-{3,}/g,"
-
-").trim();
+ return (t || "")
+   .replace(/\r/g, "")
+   .replace(/[ ]+\n/g, "\n")
+   .replace(/\n{3,}/g, "\n\n")
+   .trim();
 }
+
 
 function pickLines(t, rx, max=12){
   const lines = normalizeText(t).split("
