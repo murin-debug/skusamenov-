@@ -1,0 +1,1234 @@
+<!doctype html>
+<html lang="sk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f766e" />
+  <link rel="manifest" href="manifest.webmanifest">
+  <title>Zdravie Zálohované</title>
+  <style>
+    :root{
+      --bg:#ffffff;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --border:#e2e8f0;
+      --primary:#0f766e;
+      --primary2:#14b8a6;
+      --danger:#dc2626;
+      --shadow: 0 8px 24px rgba(15,23,42,.08);
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      background: linear-gradient(180deg, #f8fafc 0%, #ffffff 40%);
+    }
+    header{
+      position:sticky; top:0; z-index:10;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(10px);
+      border-bottom:1px solid var(--border);
+      padding: 12px 14px;
+    }
+    .topbar{
+      display:flex; gap:10px; align-items:center; justify-content:space-between;
+      max-width: 960px; margin:0 auto;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      font-weight:800;
+      letter-spacing:-0.02em;
+      min-width: 0;
+    }
+    .logo{
+      width:36px;height:36px;border-radius:12px;
+      background: radial-gradient(circle at 30% 30%, rgba(20,184,166,.85), rgba(15,118,110,.95));
+      display:grid; place-items:center;
+      color:white; font-weight:900;
+      box-shadow: 0 10px 20px rgba(15,118,110,.18);
+      flex: 0 0 auto;
+    }
+    .pill{
+      border:1px solid var(--border);
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: white;
+      color: var(--text);
+      font-size: 13px;
+      display:flex; align-items:center; gap:8px;
+      flex: 0 0 auto;
+    }
+    select, input[type="text"], textarea, input[type="date"]{
+      border:1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 14px;
+      width:100%;
+      background:white;
+    }
+    main{max-width:960px;margin:0 auto;padding: 14px 14px 90px;}
+    .grid{display:grid;grid-template-columns: 1fr;gap: 12px;}
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 12px;
+    }
+    .h1{font-size: 18px; font-weight: 800; margin:0 0 4px}
+    .sub{color:var(--muted); font-size: 13px; margin:0 0 10px}
+    .btnrow{display:flex; gap:10px; flex-wrap:wrap}
+    .btn{
+      appearance:none; border:1px solid var(--border);
+      background:white; color:var(--text);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-weight: 800;
+      cursor:pointer;
+      display:flex; align-items:center; gap:10px;
+      user-select:none;
+      min-height: 46px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn:active{transform: translateY(1px)}
+    .btn.primary{
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary2) 100%);
+      color:white; border-color: transparent;
+    }
+    .btn.primary:disabled{
+      opacity:.55; cursor:not-allowed;
+    }
+    .btn.danger{background:#fff; border-color:#fecaca; color:var(--danger)}
+    .btn.block{width:100%; justify-content:center}
+    .btn.big{padding: 14px 16px; font-size: 15px}
+    .kpis{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
+    .kpi{border:1px dashed var(--border); border-radius: 14px; padding:10px 12px; color:var(--muted); font-size: 13px}
+    .list{display:flex; flex-direction:column; gap:8px}
+    .item{
+      border:1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      display:flex; gap:10px; align-items:flex-start; justify-content:space-between;
+      background:white;
+      cursor:pointer;
+    }
+    .item:hover{border-color:#cbd5e1}
+    .item h3{margin:0; font-size: 15px}
+    .meta{color:var(--muted); font-size: 12px; margin-top:2px}
+    .badge{
+      font-size: 11px; padding: 6px 9px; border-radius: 999px;
+      border:1px solid var(--border); color:var(--muted); background:#f8fafc;
+      white-space:nowrap;
+    }
+    nav{
+      position: fixed; left:0; right:0; bottom:0; z-index:20;
+      border-top: 1px solid var(--border);
+      background: rgba(255,255,255,.95);
+      backdrop-filter: blur(10px);
+    }
+    .tabs{
+      max-width:960px; margin:0 auto;
+      display:grid; grid-template-columns: repeat(4, 1fr);
+      gap:6px; padding: 10px 10px;
+    }
+    .tab{
+      border:1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px 8px;
+      text-align:center;
+      font-weight: 900;
+      color: #0f172a;
+      background:white;
+      cursor:pointer;
+      font-size: 13px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .tab.active{border-color: rgba(15,118,110,.35); background: rgba(20,184,166,.10); color: var(--primary)}
+    .modalWrap{
+      position:fixed; inset:0; z-index:30;
+      background: rgba(15,23,42,.45);
+      display:none; align-items:flex-end; justify-content:center;
+      padding: 12px;
+    }
+    .modal{
+      width: 100%;
+      max-width: 720px;
+      background:white;
+      border-radius: 18px;
+      border:1px solid var(--border);
+      box-shadow: 0 24px 60px rgba(15,23,42,.20);
+      overflow:hidden;
+      max-height: 92vh;
+      display:flex; flex-direction:column;
+    }
+    .modal header{
+      position:unset;
+      border-bottom:1px solid var(--border);
+      padding: 12px 14px;
+      background:white;
+    }
+    .modal .body{padding: 14px; overflow:auto}
+    .row{display:grid; grid-template-columns: 1fr; gap: 10px}
+    .twocol{display:grid; grid-template-columns: 1fr 1fr; gap:10px}
+    .muted{color:var(--muted); font-size: 13px}
+    .spacer{height:8px}
+    .divider{height:1px;background:var(--border);margin:10px 0}
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+</head>
+<body>
+<header>
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo">ZZ</div>
+      <div style="min-width:0">
+        <div style="font-size:14px; line-height:1.1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis">Zdravie Zálohované</div>
+        <div style="font-size:12px; color:var(--muted); font-weight:800">pilot • lokálne v mobile</div>
+      </div>
+    </div>
+
+    <div class="pill" title="Profil">
+      <span style="color:var(--muted); font-weight:900">Profil</span>
+      <select id="profileSelect" style="width:120px; border:1px solid var(--border); border-radius:999px; padding:6px 10px; font-weight:900"></select>
+      <button class="btn" id="btnManageProfiles" type="button" style="padding:8px 10px; border-radius:999px; font-size:12px; font-weight:900">+ profil</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="grid">
+    <section class="card" id="homeCard">
+      <h2 class="h1">Rýchle akcie</h2>
+      <p class="sub">Najprv ulož správu. Potom si môžeš doplniť lieky a termíny.</p>
+
+      <div class="btnrow">
+        <button class="btn primary big" id="btnAddReport" type="button">+ Pridať správu</button>
+        <button class="btn big" id="btnExplain" type="button">Správa zrozumiteľne</button>
+        <button class="btn big" id="btnAddVisit" type="button">+ Pridať termín</button>
+        <button class="btn big" id="btnAddMed" type="button">+ Pridať liek</button>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi"><b id="kpiReports">0</b> správy</div>
+        <div class="kpi"><b id="kpiMeds">0</b> lieky</div>
+        <div class="kpi"><b id="kpiVisits">0</b> termíny</div>
+      </div>
+
+      <div class="divider"></div>
+
+      <p class="muted" style="margin:0">
+        Aplikácia nenahrádza lekára. Slúži na organizáciu správ, liekov a termínov priamo v tvojom zariadení.
+      </p>
+    </section>
+
+    <aside class="card">
+      <h2 class="h1">Záloha</h2>
+      <p class="sub">Uloží tvoje dáta do súboru (pre prípad výmeny telefónu).</p>
+      <div class="btnrow">
+        <button class="btn block" id="btnExport" type="button">Stiahnuť zálohu</button>
+        <button class="btn block danger" id="btnReset" type="button">Vymazať dáta profilu</button>
+      </div>
+      <p class="muted" style="margin:10px 0 0">Režim A: bez cache (vývoj). Neskôr doplníme offline PWA.</p>
+    </aside>
+
+    <section class="card" id="reportsCard" style="display:none">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:10px">
+        <div>
+          <h2 class="h1">Správy</h2>
+          <p class="sub">Klikni na správu pre detail.</p>
+        </div>
+        <button class="btn primary" id="btnAddReport2" type="button">+ Pridať</button>
+      </div>
+      <div class="row">
+        <select id="specFilter">
+          <option value="">Všetky odbory</option>
+          <option>Všeobecný lekár</option><option>Detský lekár</option><option>Stomatológia</option><option>Gynekológia</option>
+          <option>Urológia</option><option>Kardiológia</option><option>Ortopédia</option><option>Onkológia</option><option>Neurológia</option>
+          <option>ORL</option><option>Psychológ</option><option>Psychiater</option><option>Iné</option>
+        </select>
+        <input id="searchReports" type="text" placeholder="Hľadať (názov / poznámka)" />
+      </div>
+      <div class="spacer"></div>
+      <div class="list" id="reportsList"></div>
+    </section>
+
+    <section class="card" id="medsCard" style="display:none">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:10px">
+        <div>
+          <h2 class="h1">Lieky</h2>
+          <p class="sub">Zoznam liekov v tomto profile.</p>
+        </div>
+        <button class="btn primary" id="btnAddMed2" type="button">+ Pridať</button>
+      </div>
+      <div class="list" id="medsList"></div>
+    </section>
+
+    <section class="card" id="visitsCard" style="display:none">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:10px">
+        <div>
+          <h2 class="h1">Termíny</h2>
+          <p class="sub">Klikni na termín pre úpravu alebo zmazanie.</p>
+        </div>
+        <button class="btn primary" id="btnAddVisit2" type="button">+ Pridať</button>
+      </div>
+      <div class="list" id="visitsList"></div>
+    </section>
+  </div>
+</main>
+
+<nav>
+  <div class="tabs">
+    <button class="tab active" data-tab="home" type="button">Domov</button>
+    <button class="tab" data-tab="reports" type="button">Správy</button>
+    <button class="tab" data-tab="meds" type="button">Lieky</button>
+    <button class="tab" data-tab="visits" type="button">Termíny</button>
+  </div>
+</nav>
+
+<input id="fileCamera" type="file" accept="image/*" capture="environment" style="display:none">
+<input id="filePicker" type="file" accept="image/*,application/pdf" style="display:none">
+
+<div class="modalWrap" id="modalWrap">
+  <div class="modal" role="dialog" aria-modal="true">
+    <header>
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:10px">
+        <div>
+          <div id="modalTitle" style="font-weight:900">Modal</div>
+          <div id="modalSubtitle" class="muted"></div>
+        </div>
+        <div class="btnrow">
+          <button class="btn" id="btnClose" type="button">Zavrieť</button>
+        </div>
+      </div>
+    </header>
+    <div class="body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+
+const $ = (s) => document.querySelector(s);
+function uid(){ return Math.random().toString(36).slice(2,9) + Date.now().toString(36).slice(2,7); }
+function todayISO(){
+  const d = new Date(); const pad=(n)=>String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+}
+function escapeHtml(s){
+  return (s||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;");
+}
+function dataKey(profileId){ return `zz_data_${profileId}`; }
+
+function loadProfiles(){
+  let profiles = JSON.parse(localStorage.getItem("zz_profiles") || "null");
+  if(!profiles || !Array.isArray(profiles) || profiles.length===0){
+    profiles = [{ id: "me", name: "Ja" }];
+    localStorage.setItem("zz_profiles", JSON.stringify(profiles));
+  }
+  let active = localStorage.getItem("zz_activeProfile");
+  if(!active || !profiles.find(p=>p.id===active)){
+    active = profiles[0].id;
+    localStorage.setItem("zz_activeProfile", active);
+  }
+  return {profiles, active};
+}
+function saveProfiles(profiles, active){
+  localStorage.setItem("zz_profiles", JSON.stringify(profiles));
+  localStorage.setItem("zz_activeProfile", active);
+}
+function loadData(profileId){
+  let d = JSON.parse(localStorage.getItem(dataKey(profileId)) || "null");
+  if(!d) d = { reports:[], meds:[], visits:[] };
+  if(!d.reports) d.reports=[];
+  if(!d.meds) d.meds=[];
+  if(!d.visits) d.visits=[];
+  localStorage.setItem(dataKey(profileId), JSON.stringify(d));
+  return d;
+}
+function saveData(profileId, d){ localStorage.setItem(dataKey(profileId), JSON.stringify(d)); }
+
+let STATE = { profiles: [], activeProfile: "me", data: {reports:[], meds:[], visits:[]}, tab: "home" };
+
+function openModal(title, subtitle, bodyHTML){
+  $("#modalTitle").textContent = title;
+  $("#modalSubtitle").textContent = subtitle || "";
+  $("#modalBody").innerHTML = bodyHTML || "";
+  $("#modalWrap").style.display = "flex";
+}
+function closeModal(){ $("#modalWrap").style.display = "none"; $("#modalBody").innerHTML=""; }
+
+function renderProfiles(){
+  const sel = $("#profileSelect");
+  sel.innerHTML = "";
+  STATE.profiles.forEach(p=>{
+    const opt = document.createElement("option");
+    opt.value = p.id; opt.textContent = p.name;
+    sel.appendChild(opt);
+  });
+  sel.value = STATE.activeProfile;
+}
+
+function renderKPIs(){
+  $("#kpiReports").textContent = STATE.data.reports.length;
+  $("#kpiMeds").textContent = STATE.data.meds.length;
+  $("#kpiVisits").textContent = STATE.data.visits.length;
+}
+
+function setTab(tab){
+  STATE.tab = tab;
+  document.querySelectorAll(".tab").forEach(btn=> btn.classList.toggle("active", btn.dataset.tab===tab));
+  $("#homeCard").style.display = (tab==="home") ? "" : "none";
+  $("#reportsCard").style.display = (tab==="reports") ? "" : "none";
+  $("#medsCard").style.display = (tab==="meds") ? "" : "none";
+  $("#visitsCard").style.display = (tab==="visits") ? "" : "none";
+  if(tab==="reports") renderReports();
+  if(tab==="meds") renderMeds();
+  if(tab==="visits") renderVisits();
+  renderKPIs();
+}
+
+function reportTitle(r){
+  if(r.title && r.title.trim()) return r.title.trim();
+  const dt = (r.date || todayISO());
+  return `${r.specialty || "Správa"} – ${dt}`;
+}
+
+function renderReports(){
+  const list = $("#reportsList");
+  list.innerHTML = "";
+  const q = ($("#searchReports").value || "").toLowerCase().trim();
+  const f = $("#specFilter").value || "";
+  const arr = [...STATE.data.reports].sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).filter(r=>{
+    if(f && (r.specialty||"")!==f) return false;
+    if(!q) return true;
+    const hay = `${reportTitle(r)} ${r.note||""} ${r.specialty||""}`.toLowerCase();
+    return hay.includes(q);
+  });
+
+  if(arr.length===0){
+    list.innerHTML = `<div class="muted">Zatiaľ žiadne správy. Klikni <b>+ Pridať</b>.</div>`;
+    return;
+  }
+
+  arr.forEach(r=>{
+    const div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = `
+      <div>
+        <h3>${escapeHtml(reportTitle(r))}</h3>
+        <div class="meta">${escapeHtml(r.specialty||"")}${r.note?(" • "+escapeHtml(r.note)):""}</div>
+      </div>
+      <div class="badge">${r.fileType || "Súbor"}</div>
+    `;
+    div.addEventListener("click", ()=> openReportDetail(r.id));
+    list.appendChild(div);
+  });
+}
+
+function renderMeds(){
+  const list = $("#medsList");
+  list.innerHTML = "";
+  const arr = [...STATE.data.meds].sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+  if(arr.length===0){ list.innerHTML = `<div class="muted">Zatiaľ žiadne lieky. Klikni <b>+ Pridať</b>.</div>`; return; }
+  arr.forEach(m=>{
+    const div=document.createElement("div");
+    div.className="item";
+    div.innerHTML = `
+      <div>
+        <h3>${escapeHtml(m.name || "Liek")}</h3>
+        <div class="meta">${escapeHtml(m.dose||"")}${m.note?(" • "+escapeHtml(m.note)):""}</div>
+      </div>
+      <div class="badge">${escapeHtml(m.until || "")}</div>
+    `;
+    div.addEventListener("click", ()=> editMed(m.id));
+    list.appendChild(div);
+  });
+}
+
+function renderVisits(){
+  const list = $("#visitsList");
+  list.innerHTML = "";
+  const arr = [...STATE.data.visits].sort((a,b)=>(a.date||"").localeCompare(b.date||""));
+  if(arr.length===0){ list.innerHTML = `<div class="muted">Zatiaľ žiadne termíny. Klikni <b>+ Pridať</b>.</div>`; return; }
+  arr.forEach(v=>{
+    const div=document.createElement("div");
+    div.className="item";
+    div.innerHTML = `
+      <div>
+        <h3>${escapeHtml(v.title || "Kontrola")}</h3>
+        <div class="meta">${escapeHtml(v.specialty||"")}${v.note?(" • "+escapeHtml(v.note)):""}</div>
+      </div>
+      <div class="badge">${escapeHtml(v.date||"")}</div>
+    `;
+    div.addEventListener("click", ()=> editVisit(v.id));
+    list.appendChild(div);
+  });
+}
+
+function fileToDataUrl(file){
+  return new Promise((resolve, reject)=>{
+    const r = new FileReader();
+    r.onload = ()=> resolve(r.result);
+    r.onerror = reject;
+    r.readAsDataURL(file);
+  });
+}
+
+function renderFilePreview(r){
+  if(!r.fileDataUrl) return `<div class="muted">Chýba súbor.</div>`;
+  if((r.fileType||"").toUpperCase()==="PDF"){
+    return `<iframe src="${r.fileDataUrl}" style="width:100%; height:420px; border:1px solid var(--border); border-radius:14px"></iframe>`;
+  }
+  return `<img src="${r.fileDataUrl}" alt="Správa" style="width:100%; border:1px solid var(--border); border-radius:14px">`;
+}
+
+function renderModulesEditor(r){
+  const m = r.modules || {A:"",B:"",C:"",D:"",E:""};
+  return `
+    <div class="row">
+      <textarea id="mA" rows="3" placeholder="A) Stručné zhrnutie">${escapeHtml(m.A||"")}</textarea>
+      <textarea id="mB" rows="3" placeholder="B) Vysvetlenie diagnózy">${escapeHtml(m.B||"")}</textarea>
+      <textarea id="mC" rows="3" placeholder="C) Výsledky (krv, hormóny, markery...)">${escapeHtml(m.C||"")}</textarea>
+      <textarea id="mD" rows="3" placeholder="D) Riziká a upozornenia">${escapeHtml(m.D||"")}</textarea>
+      <textarea id="mE" rows="3" placeholder="E) Lieky (samostatne)">${escapeHtml(m.E||"")}</textarea>
+    </div>
+  `;
+}
+
+function showAddReport(){
+  openModal(
+    "Pridať správu",
+    "Odfoť alebo vyber PDF/foto. Povinný je len odbor.",
+    `
+      <div class="row">
+        <div>
+          <div class="muted" style="font-weight:900;margin-bottom:6px">Odbor</div>
+          <select id="rSpec">
+            <option>Všeobecný lekár</option><option>Detský lekár</option><option>Stomatológia</option><option>Gynekológia</option>
+            <option>Urológia</option><option>Kardiológia</option><option>Ortopédia</option><option>Onkológia</option><option>Neurológia</option>
+            <option>ORL</option><option>Psychológ</option><option>Psychiater</option><option>Iné</option>
+          </select>
+        </div>
+
+        <div class="twocol">
+          <button class="btn primary big block" id="btnTakePhoto" type="button">📷 Odfotiť</button>
+          <button class="btn big block" id="btnPickFile" type="button">📎 Vybrať súbor</button>
+        </div>
+
+        <details>
+          <summary style="cursor:pointer;font-weight:900;color:var(--muted)">Voliteľné údaje</summary>
+          <div class="spacer"></div>
+          <input id="rTitle" type="text" placeholder="Názov (voliteľné)" />
+          <textarea id="rNote" placeholder="Poznámka (voliteľné)" rows="2"></textarea>
+          <input id="rDate" type="date" value="${todayISO()}" />
+        </details>
+
+        <div class="divider"></div>
+        <button class="btn primary big block" id="btnSaveReport" type="button" disabled>Uložiť správu</button>
+        <div class="muted" id="fileHint">Najprv vyber súbor (foto/PDF).</div>
+      </div>
+    `
+  );
+
+  let picked = null;
+  const saveBtn = $("#btnSaveReport");
+  const hint = $("#fileHint");
+
+  const onPick = (file)=>{
+    picked = file;
+    saveBtn.disabled = !picked;
+    hint.textContent = picked ? `Vybrané: ${file.name || "foto"}` : "Najprv vyber súbor (foto/PDF).";
+  };
+
+  $("#btnTakePhoto").addEventListener("click", ()=>{
+    $("#fileCamera").value = "";
+    $("#fileCamera").click();
+  });
+  $("#btnPickFile").addEventListener("click", ()=>{
+    $("#filePicker").value = "";
+    $("#filePicker").click();
+  });
+
+  const handleChange = (e)=> onPick(e.target.files && e.target.files[0] ? e.target.files[0] : null);
+  $("#fileCamera").onchange = handleChange;
+  $("#filePicker").onchange = handleChange;
+
+  saveBtn.addEventListener("click", async ()=>{
+    if(!picked) return;
+    try{
+      saveBtn.disabled = true;
+      saveBtn.textContent = "Ukladám…";
+      const r = {
+        id: uid(),
+        specialty: $("#rSpec").value,
+        title: ($("#rTitle").value || "").trim(),
+        note: ($("#rNote").value || "").trim(),
+        date: ($("#rDate")?.value || todayISO()),
+        createdAt: Date.now(),
+        fileType: (picked.type||"").includes("pdf") ? "PDF" : "FOTO",
+        fileName: picked.name || "",
+        fileDataUrl: await fileToDataUrl(picked),
+        transcript: "",
+        simple: "",
+        modules: {A:"",B:"",C:"",D:"",E:""}
+      };
+      STATE.data.reports.push(r);
+      saveData(STATE.activeProfile, STATE.data);
+      closeModal();
+      setTab("reports");
+    }catch(err){
+      console.error(err);
+      alert("Nepodarilo sa uložiť správu. Skús prosím ešte raz.");
+      saveBtn.disabled = !picked;
+      saveBtn.textContent = "Uložiť správu";
+    }
+  });
+}
+
+function openReportPickerForExplain(){
+  // V1: umožní vybrať existujúcu správu alebo rovno odfotiť/nahrať novú.
+  const hasReports = STATE.data.reports.length>0;
+
+  const options = hasReports
+    ? [...STATE.data.reports].sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).slice(0,50).map(r=>(
+        `<option value="${r.id}">${escapeHtml(reportTitle(r))}</option>`
+      )).join("")
+    : `<option value="">(zatIAľ nemáš uložené správy)</option>`;
+
+  openModal("Správa zrozumiteľne",
+    "Vyber zdroj správy. Odporúčame: odfotiť alebo vybrať súbor.",
+    `
+      <div class="row">
+        <div class="twocol">
+          <button class="btn primary big block" id="exTakePhoto" type="button">📷 Odfotiť</button>
+          <button class="btn big block" id="exPickFile" type="button">📎 Vybrať súbor</button>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="muted" style="font-weight:900;margin-bottom:6px">Alebo vyber už uloženú správu</div>
+        <select id="pickReport" ${hasReports ? "" : "disabled"}>
+          ${options}
+        </select>
+        <div class="spacer"></div>
+        <button class="btn primary big block" id="goExplain" type="button" ${hasReports ? "" : "disabled"}>Otvoriť detail</button>
+
+        <div class="divider"></div>
+        <div class="muted">
+          Tip: V tejto verzii je „zrozumiteľne“ orientačné (bez AI servera). Funguje však hneď a všetko sa ukladá len v tvojom telefóne.
+        </div>
+      </div>
+    `
+  );
+
+  const startExplainAfterSave = async (file)=>{
+    // krátky minimal form: vyber odbor a uložíme správu, potom otvoríme detail
+    closeModal();
+    await showQuickAddReport(file, {openDetailAfter:true, autoExplain:true});
+  };
+
+  $("#exTakePhoto").addEventListener("click", ()=>{
+    $("#fileCamera").value = "";
+    $("#fileCamera").onchange = async (e)=>{
+      const f = e.target.files && e.target.files[0] ? e.target.files[0] : null;
+      $("#fileCamera").onchange = null;
+      if(f) startExplainAfterSave(f);
+    };
+    $("#fileCamera").click();
+  });
+
+  $("#exPickFile").addEventListener("click", ()=>{
+    $("#filePicker").value = "";
+    $("#filePicker").onchange = async (e)=>{
+      const f = e.target.files && e.target.files[0] ? e.target.files[0] : null;
+      $("#filePicker").onchange = null;
+      if(f) startExplainAfterSave(f);
+    };
+    $("#filePicker").click();
+  });
+
+  $("#goExplain")?.addEventListener("click", ()=>{
+    const id = $("#pickReport").value;
+    closeModal();
+    openReportDetail(id);
+    // jemne nasmerujeme používateľa
+    setTimeout(()=> {
+      try{ $("#btnMakeText")?.scrollIntoView({behavior:"smooth", block:"center"}); }catch(_){}
+    }, 250);
+  });
+}
+
+function openReportDetail(reportId, opts={}){
+  const r = STATE.data.reports.find(x=>x.id===reportId);
+  if(!r) return;
+  const body = `
+    <div class="row">
+      <div class="btnrow">
+        <button class="btn" id="btnBackToList" type="button">← Späť</button>
+        <button class="btn danger" id="btnDeleteReport" type="button">Zmazať</button>
+      </div>
+
+      <div class="card" style="box-shadow:none">
+        <div style="font-weight:900;font-size:16px">${escapeHtml(reportTitle(r))}</div>
+        <div class="muted">${escapeHtml(r.specialty||"")} • ${escapeHtml(r.date||"")}</div>
+      </div>
+
+      <div class="btnrow">
+        <button class="btn primary block" id="btnMakeText" type="button">Prepis do textu</button>
+        <button class="btn primary block" id="btnSimple" type="button">Správa zrozumiteľne</button>
+        <button class="btn block" id="btnMedsFrom" type="button">Vytiahnuť lieky</button>
+        <button class="btn block" id="btnAddVisitFrom" type="button">Pridať termín kontroly</button>
+      </div>
+
+      <details open>
+        <summary style="cursor:pointer;font-weight:900">Originál (foto/PDF)</summary>
+        <div class="spacer"></div>
+        ${renderFilePreview(r)}
+      </details>
+
+      <details id="dTranscript">
+        <summary style="cursor:pointer;font-weight:900">Prepis (text)</summary>
+        <div class="spacer"></div>
+        <textarea id="taTranscript" rows="7" placeholder="Sem vlož text zo správy (zatiaľ ručne).">${escapeHtml(r.transcript||"")}</textarea>
+        <div class="spacer"></div>
+        <button class="btn primary" id="btnSaveTranscript" type="button">Uložiť prepis</button>
+      </details>
+
+      <details open id="dSimple">
+        <summary style="cursor:pointer;font-weight:900">Zrozumiteľne (uložené)</summary>
+        <div class="spacer"></div>
+        <textarea id="taSimple" rows="7" placeholder="Sem sa uloží zrozumiteľné vysvetlenie (zatiaľ šablóna).">${escapeHtml(r.simple||"")}</textarea>
+        <div class="spacer"></div>
+        <button class="btn primary" id="btnSaveSimple" type="button">Uložiť vysvetlenie</button>
+        <div class="divider"></div>
+        <div class="muted" style="font-weight:900">Moduly A–E (voliteľné)</div>
+        ${renderModulesEditor(r)}
+        <div class="spacer"></div>
+        <button class="btn primary" id="btnSaveModules" type="button">Uložiť moduly</button>
+      </details>
+    </div>
+  `;
+  openModal("Detail správy", "", body);
+
+  $("#btnBackToList").addEventListener("click", ()=> { closeModal(); setTab("reports"); });
+  $("#btnDeleteReport").addEventListener("click", ()=>{
+    if(!confirm("Zmazať túto správu?")) return;
+    STATE.data.reports = STATE.data.reports.filter(x=>x.id!==r.id);
+    saveData(STATE.activeProfile, STATE.data);
+    closeModal();
+    setTab("reports");
+  });
+
+  $("#btnSaveTranscript").addEventListener("click", ()=>{
+    r.transcript = ($("#taTranscript").value || "").trim();
+    saveData(STATE.activeProfile, STATE.data);
+    alert("Uložené.");
+  });
+
+  $("#btnSaveSimple").addEventListener("click", ()=>{
+    r.simple = ($("#taSimple").value || "").trim();
+    saveData(STATE.activeProfile, STATE.data);
+    alert("Uložené.");
+  });
+
+  $("#btnSaveModules").addEventListener("click", ()=>{
+    r.modules = {
+      A: ($("#mA").value||"").trim(),
+      B: ($("#mB").value||"").trim(),
+      C: ($("#mC").value||"").trim(),
+      D: ($("#mD").value||"").trim(),
+      E: ($("#mE").value||"").trim(),
+    };
+    saveData(STATE.activeProfile, STATE.data);
+    alert("Uložené.");
+  });
+
+  $("#btnMakeText").addEventListener("click", async ()=>{
+    $("#dTranscript").open = true;
+    $("#taTranscript").focus();
+    try{
+      // ak už máme text, ponúkneme prepočítať
+      if((r.transcript||"").trim() && !confirm("Prepis už existuje. Prepísať nanovo z originálu?")) return;
+      if(!r.fileDataUrl){ alert("Chýba originál správy."); return; }
+      const ta = $("#taTranscript");
+      ta.value = "Prepisujem… (môže trvať 10–30 sekúnd)";
+      const prog = (m)=>{
+        // jemný progress do textarea
+        if(m && m.progress!=null){
+          ta.value = `Prepisujem… ${(m.progress*100).toFixed(0)}%`;
+        }
+      };
+      const text = await ocrFromDataUrl(r.fileDataUrl, prog);
+      r.transcript = text;
+      ta.value = text || "";
+      saveData(STATE.activeProfile, STATE.data);
+      alert("Hotovo. Prepis je uložený.");
+    }catch(err){
+      console.error(err);
+      alert("OCR sa nepodarilo. Skontroluj internet (na prvé načítanie OCR knižnice) a skús znova.");
+    }
+  });
+$("#btnSimple").addEventListener("click", ()=>{
+    const t = ($("#taTranscript").value||"").trim();
+    if(!t){
+      $("#dTranscript").open = true;
+      alert("Najprv sprav „Prepis do textu“ (alebo vlož text ručne). Potom vieme vytvoriť zrozumiteľné vysvetlenie.");
+      return;
+    }
+    const out = generateUnderstanding(t);
+    // uložíme sumarizáciu + moduly
+    r.simple = out.summary;
+    r.modules = out.modules;
+    $("#taSimple").value = r.simple;
+    $("#mA").value = r.modules.A||"";
+    $("#mB").value = r.modules.B||"";
+    $("#mC").value = r.modules.C||"";
+    $("#mD").value = r.modules.D||"";
+    $("#mE").value = r.modules.E||"";
+    saveData(STATE.activeProfile, STATE.data);
+    $("#dSimple").open = true;
+    // skrol na uložené vysvetlenie
+    try{ $("#dSimple").scrollIntoView({behavior:"smooth", block:"start"}); }catch(_){}
+  });
+$("#btnMedsFrom").addEventListener("click", ()=> alert("V tejto verzii je vytiahnutie liekov bez AI. Pridaj liek ručne cez + Pridať liek."));
+  $("#btnAddVisitFrom").addEventListener("click", ()=> showAddVisit({ specialty: r.specialty || "", title: "Kontrola", date: r.date || todayISO(), note: "" }));
+}
+
+  // auto-spustenie (ak sme prišli cez „Správa zrozumiteľne“)
+  if(opts && opts.autoExplain){
+    setTimeout(()=>{
+      $("#btnMakeText")?.click();
+      // po OCR automaticky spravíme zrozumiteľne, keď bude text hotový (používateľ môže zrušiť)
+      setTimeout(()=>{
+        try{ $("#btnSimple")?.click(); }catch(_){ }
+      }, 800);
+    }, 350);
+  }
+}
+
+function showAddMed(){
+  openModal("Pridať liek", "Jednoduchý zápis do histórie liekov.", `
+    <div class="row">
+      <input id="mName" type="text" placeholder="Názov lieku">
+      <input id="mDose" type="text" placeholder="Dávkovanie (napr. 1-0-1)">
+      <input id="mUntil" type="text" placeholder="Trvanie (napr. 10 dní / do 2026-03-01)">
+      <textarea id="mNote" rows="2" placeholder="Poznámka (voliteľné)"></textarea>
+      <button class="btn primary big block" id="btnSaveMed" type="button">Uložiť</button>
+    </div>
+  `);
+  $("#btnSaveMed").addEventListener("click", ()=>{
+    const rec = { id: uid(), name: ($("#mName").value||"").trim(), dose: ($("#mDose").value||"").trim(), until: ($("#mUntil").value||"").trim(), note: ($("#mNote").value||"").trim(), createdAt: Date.now() };
+    STATE.data.meds.push(rec);
+    saveData(STATE.activeProfile, STATE.data);
+    closeModal(); setTab("meds");
+  });
+}
+
+function editMed(id){
+  const m = STATE.data.meds.find(x=>x.id===id);
+  if(!m) return;
+  openModal("Upraviť liek", "", `
+    <div class="row">
+      <input id="mName" type="text" value="${escapeHtml(m.name)}">
+      <input id="mDose" type="text" value="${escapeHtml(m.dose)}">
+      <input id="mUntil" type="text" value="${escapeHtml(m.until)}">
+      <textarea id="mNote" rows="2">${escapeHtml(m.note)}</textarea>
+      <div class="twocol">
+        <button class="btn primary big block" id="btnSaveMed" type="button">Uložiť</button>
+        <button class="btn danger big block" id="btnDelMed" type="button">Zmazať</button>
+      </div>
+    </div>
+  `);
+  $("#btnSaveMed").addEventListener("click", ()=>{
+    m.name = ($("#mName").value||"").trim() || m.name;
+    m.dose = ($("#mDose").value||"").trim();
+    m.until = ($("#mUntil").value||"").trim();
+    m.note = ($("#mNote").value||"").trim();
+    saveData(STATE.activeProfile, STATE.data);
+    closeModal(); setTab("meds");
+  });
+  $("#btnDelMed").addEventListener("click", ()=>{
+    if(!confirm("Zmazať liek?")) return;
+    STATE.data.meds = STATE.data.meds.filter(x=>x.id!==m.id);
+    saveData(STATE.activeProfile, STATE.data);
+    closeModal(); setTab("meds");
+  });
+}
+
+function showAddVisit(prefill=null){
+  const v = prefill || { title:"Kontrola", specialty:"", date: todayISO(), note:"" };
+  openModal("Pridať termín", "Termín môžeš neskôr upraviť alebo zmazať.", `
+    <div class="row">
+      <input id="vTitle" type="text" value="${escapeHtml(v.title)}">
+      <select id="vSpec">
+        <option value="">Odbor (voliteľné)</option>
+        <option>Všeobecný lekár</option><option>Detský lekár</option><option>Stomatológia</option><option>Gynekológia</option>
+        <option>Urológia</option><option>Kardiológia</option><option>Ortopédia</option><option>Onkológia</option><option>Neurológia</option>
+        <option>ORL</option><option>Psychológ</option><option>Psychiater</option><option>Iné</option>
+      </select>
+      <input id="vDate" type="date" value="${escapeHtml(v.date)}">
+      <textarea id="vNote" rows="2" placeholder="Poznámka">${escapeHtml(v.note)}</textarea>
+      <button class="btn primary big block" id="btnSaveVisit" type="button">Uložiť</button>
+    </div>
+  `);
+  $("#vSpec").value = v.specialty || "";
+  $("#btnSaveVisit").addEventListener("click", ()=>{
+    const rec = { id: uid(), title: ($("#vTitle").value||"").trim() || "Kontrola", specialty: ($("#vSpec").value||"").trim(), date: ($("#vDate").value||todayISO()), note: ($("#vNote").value||"").trim(), createdAt: Date.now() };
+    STATE.data.visits.push(rec);
+    saveData(STATE.activeProfile, STATE.data);
+    closeModal(); setTab("visits");
+  });
+}
+
+function editVisit(id){
+  const v = STATE.data.visits.find(x=>x.id===id);
+  if(!v) return;
+  openModal("Upraviť termín", "", `
+    <div class="row">
+      <input id="vTitle" type="text" value="${escapeHtml(v.title)}">
+      <select id="vSpec">
+        <option value="">Odbor (voliteľné)</option>
+        <option>Všeobecný lekár</option><option>Detský lekár</option><option>Stomatológia</option><option>Gynekológia</option>
+        <option>Urológia</option><option>Kardiológia</option><option>Ortopédia</option><option>Onkológia</option><option>Neurológia</option>
+        <option>ORL</option><option>Psychológ</option><option>Psychiater</option><option>Iné</option>
+      </select>
+      <input id="vDate" type="date" value="${escapeHtml(v.date)}">
+      <textarea id="vNote" rows="2">${escapeHtml(v.note)}</textarea>
+      <div class="twocol">
+        <button class="btn primary big block" id="btnSaveVisit" type="button">Uložiť</button>
+        <button class="btn danger big block" id="btnDelVisit" type="button">Zmazať</button>
+      </div>
+    </div>
+  `);
+  $("#vSpec").value = v.specialty || "";
+  $("#btnSaveVisit").addEventListener("click", ()=>{
+    v.title = ($("#vTitle").value||"").trim() || "Kontrola";
+    v.specialty = ($("#vSpec").value||"").trim();
+    v.date = ($("#vDate").value||todayISO());
+    v.note = ($("#vNote").value||"").trim();
+    saveData(STATE.activeProfile, STATE.data);
+    closeModal(); setTab("visits");
+  });
+  $("#btnDelVisit").addEventListener("click", ()=>{
+    if(!confirm("Zmazať termín?")) return;
+    STATE.data.visits = STATE.data.visits.filter(x=>x.id!==v.id);
+    saveData(STATE.activeProfile, STATE.data);
+    closeModal(); setTab("visits");
+  });
+}
+
+function manageProfiles(){
+  const rows = STATE.profiles.map(p=>`
+    <div class="item" style="cursor:default">
+      <div>
+        <h3>${escapeHtml(p.name)}</h3>
+        <div class="meta">ID: ${escapeHtml(p.id)}</div>
+      </div>
+      <div class="btnrow">
+        <button class="btn" data-edit="${p.id}" type="button">Upraviť</button>
+        ${p.id==="me" ? `<span class="badge">hlavný</span>` : `<button class="btn danger" data-del="${p.id}" type="button">Zmazať</button>`}
+      </div>
+    </div>
+  `).join("");
+  openModal("Profily", "Pre rodiča / dieťa / seniora. Údaje sú lokálne v zariadení.", `
+    <div class="row">
+      <div class="btnrow">
+        <button class="btn primary" id="btnNewProfile" type="button">+ Nový profil</button>
+      </div>
+      <div class="spacer"></div>
+      <div class="list">${rows || `<div class="muted">Žiadne profily.</div>`}</div>
+    </div>
+  `);
+
+  $("#btnNewProfile").addEventListener("click", ()=>{
+    openModal("Nový profil", "Napr. Mama, Otec, Dieťa", `
+      <div class="row">
+        <input id="pName" type="text" placeholder="Názov profilu (napr. Mama)" />
+        <button class="btn primary big block" id="btnCreateProfile" type="button">Vytvoriť</button>
+      </div>
+    `);
+    $("#btnCreateProfile").addEventListener("click", ()=>{
+      const name = ($("#pName").value||"").trim();
+      if(!name){ alert("Zadaj názov profilu."); return; }
+      const p = { id: uid(), name };
+      STATE.profiles.push(p);
+      saveProfiles(STATE.profiles, STATE.activeProfile);
+      renderProfiles();
+      manageProfiles();
+    });
+  });
+
+  $("#modalBody").querySelectorAll("[data-edit]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id = btn.getAttribute("data-edit");
+      const p = STATE.profiles.find(x=>x.id===id);
+      if(!p) return;
+      openModal("Upraviť profil", "", `
+        <div class="row">
+          <input id="pName" type="text" value="${escapeHtml(p.name)}" />
+          <button class="btn primary big block" id="btnSaveProfile" type="button">Uložiť</button>
+        </div>
+      `);
+      $("#btnSaveProfile").addEventListener("click", ()=>{
+        p.name = ($("#pName").value||"").trim() || p.name;
+        saveProfiles(STATE.profiles, STATE.activeProfile);
+        renderProfiles();
+        manageProfiles();
+      });
+    });
+  });
+  $("#modalBody").querySelectorAll("[data-del]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id = btn.getAttribute("data-del");
+      if(!confirm("Zmazať profil a jeho dáta?")) return;
+      STATE.profiles = STATE.profiles.filter(x=>x.id!==id);
+      localStorage.removeItem(dataKey(id));
+      if(STATE.activeProfile===id){
+        STATE.activeProfile = STATE.profiles[0]?.id || "me";
+        localStorage.setItem("zz_activeProfile", STATE.activeProfile);
+      }
+      saveProfiles(STATE.profiles, STATE.activeProfile);
+      STATE.data = loadData(STATE.activeProfile);
+      renderProfiles();
+      closeModal();
+      setTab("home");
+    });
+  });
+}
+
+function exportBackup(){
+  const payload = { exportedAt: new Date().toISOString(), profiles: STATE.profiles, activeProfile: STATE.activeProfile, dataByProfile: {} };
+  STATE.profiles.forEach(p=> payload.dataByProfile[p.id] = loadData(p.id));
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `ZZ_zaloha_${todayISO()}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+function resetProfileData(){
+  if(!confirm("Naozaj vymazať dáta aktuálneho profilu?")) return;
+  localStorage.removeItem(dataKey(STATE.activeProfile));
+  STATE.data = loadData(STATE.activeProfile);
+  setTab("home");
+}
+
+
+// --- QUICK ADD (pre tlačidlo Správa zrozumiteľne) ---
+async function showQuickAddReport(pickedFile, opts={openDetailAfter:false, autoExplain:false}){
+  // vyžiadame len odbor a dátum (ostatné voliteľné)
+  return new Promise((resolve)=>{
+    openModal("Nová správa", "Vyber odbor a potvrď. Súbor už je pripravený.", `
+      <div class="row">
+        <div>
+          <div class="muted" style="font-weight:900;margin-bottom:6px">Odbor</div>
+          <select id="qrSpec">
+            <option>Všeobecný lekár</option><option>Detský lekár</option><option>Stomatológia</option><option>Gynekológia</option>
+            <option>Urológia</option><option>Kardiológia</option><option>Ortopédia</option><option>Onkológia</option><option>Neurológia</option>
+            <option>ORL</option><option>Psychológ</option><option>Psychiater</option><option>Iné</option>
+          </select>
+        </div>
+
+        <input id="qrDate" type="date" value="${todayISO()}" />
+
+        <button class="btn primary big block" id="qrSave" type="button">Uložiť a pokračovať</button>
+        <div class="muted">Súbor: ${escapeHtml(pickedFile?.name || "foto")}</div>
+      </div>
+    `);
+
+    $("#qrSave").addEventListener("click", async ()=>{
+      try{
+        const r = {
+          id: uid(),
+          specialty: $("#qrSpec").value,
+          title: "",
+          note: "",
+          date: $("#qrDate")?.value || todayISO(),
+          createdAt: Date.now(),
+          fileType: (pickedFile.type||"").includes("pdf") ? "PDF" : "FOTO",
+          fileName: pickedFile.name || "",
+          fileDataUrl: await fileToDataUrl(pickedFile),
+          transcript: "",
+          simple: "",
+          modules: {A:"",B:"",C:"",D:"",E:""}
+        };
+        STATE.data.reports.push(r);
+        saveData(STATE.activeProfile, STATE.data);
+        closeModal();
+        if(opts.openDetailAfter){
+          openReportDetail(r.id, {autoExplain: !!opts.autoExplain});
+        }else{
+          setTab("reports");
+        }
+        resolve(r);
+      }catch(err){
+        console.error(err);
+        alert("Nepodarilo sa uložiť správu. Skús prosím ešte raz.");
+      }
+    });
+  });
+}
+
+// --- OCR (lokálne v prehliadači, bez servera) ---
+async function ocrFromDataUrl(dataUrl, onProgress){
+  if(typeof Tesseract==="undefined"){
+    throw new Error("OCR knižnica sa nenačítala. Skontroluj internet pripojenie.");
+  }
+  const { data } = await Tesseract.recognize(dataUrl, "slk+ces+eng", {
+    logger: (m)=>{
+      if(onProgress && m && m.status){
+        onProgress(m);
+      }
+    }
+  });
+  return (data && data.text ? data.text : "").trim();
+}
+
+// --- RULE-BASED „ZROZUMITEĽNE“ (bez AI) ---
+function normalizeText(t){
+  return (t||"").replace(//g,"").replace(/[ 	]+
+/g,"
+").replace(/
+{3,}/g,"
+
+").trim();
+}
+
+function pickLines(t, rx, max=12){
+  const lines = normalizeText(t).split("
+").map(x=>x.trim()).filter(Boolean);
+  const out = [];
+  for(const ln of lines){
+    if(rx.test(ln)){ out.push(ln); if(out.length>=max) break; }
+  }
+  return out;
+}
+
+function extractSectionByKeywords(t, keywords){
+  const lines = normalizeText(t).split("
+");
+  const lower = lines.map(x=>x.toLowerCase());
+  const idx = lower.findIndex(l=>keywords.some(k=>l.includes(k)));
+  if(idx<0) return "";
+  // vezmeme pár riadkov po nadpise
+  const chunk = lines.slice(idx, idx+10).join("
+").trim();
+  return chunk;
+}
+
+function explainLabs(t){
+  const dict = {
+    "crp":"CRP je marker zápalu. Vyššie hodnoty často znamenajú zápal alebo infekciu.",
+    "tsh":"TSH súvisí so štítnou žľazou (riadenie hormónov štítnej žľazy).",
+    "ft4":"fT4 je hormón štítnej žľazy (voľný tyroxín).",
+    "hb":"Hb (hemoglobín) súvisí s prenášaním kyslíka a anémiou.",
+    "wbc":"WBC (biele krvinky) súvisia so zápalom / imunitou.",
+    "plt":"PLT (krvné doštičky) súvisia so zrážanlivosťou.",
+    "alt":"ALT je pečeňový enzým (pečeňové zaťaženie).",
+    "ast":"AST je enzým (pečeň/svaly).",
+    "gluk":"Glukóza súvisí s cukrom v krvi.",
+    "chol":"Cholesterol súvisí s tukmi v krvi."
+  };
+  const lines = normalizeText(t).split("
+").map(x=>x.trim()).filter(Boolean);
+  const hits = [];
+  for(const ln of lines){
+    const l = ln.toLowerCase();
+    for(const k in dict){
+      if(l.startsWith(k) || l.includes(" "+k+" ") || l.includes(k+":")){
+        hits.push(`• ${ln}
+  – ${dict[k]}`);
+        break;
+      }
+    }
+    if(hits.length>=10) break;
+  }
+  if(!hits.length) return "V správe sú laboratórne hodnoty. V tejto verzii vieme vysvetliť len najčastejšie skratky (CRP, TSH, Hb, WBC…). V AI verzii to bude presnejšie.";
+  return hits.join("
+");
+}
+
+function generateUnderstanding(t){
+  const text = normalizeText(t);
+  const diag = extractSectionByKeywords(text, ["diag", "diagn", "záver", "zaver", "nález", "nalez", "impress", "zhrnut"]);
+  const rec = extractSectionByKeywords(text, ["odpor", "doporu", "kontrol", "liečb", "liecb", "terap", "režim", "rezim"]);
+  const meds = pickLines(text, /(mg|mcg|µg|tbl|cps|caps|inj|ml|1x|2x|3x|denne|večer|ráno|rano)/i, 12);
+
+  const summary = [
+    "Stručné zhrnutie (orientačné):",
+    "• Toto je pomocné vysvetlenie textu zo správy. Nenahrádza lekára.",
+    diag ? `• Kľúčová časť správy (záver/diagnóza):
+${diag}` : "• V správe sme nenašli jasne označený „záver/diagnózu“. Skús najprv spraviť prepis do textu a potom znovu.",
+    rec ? `• Odporúčania / ďalší postup:
+${rec}` : "• Odporúčania: ak sú v správe, skús ich vyhľadať podľa slov „odporúčame / kontrola / ďalšie vyšetrenie“."
+  ].filter(Boolean).join("
+
+");
+
+  const modules = {
+    A: "Rýchle zhrnutie:
+" + (diag ? diag : "(doplníš podľa správy)") + "
+
+Odporúčania:
+" + (rec ? rec : "(doplníš)"),
+    B: "Diagnóza a nález (pojmy):
+" + (diag ? diag : "(zatiaľ nenašlo)"),
+    C: "Výsledky (krv/hormóny/markery):
+" + explainLabs(text),
+    D: "Riziká a upozornenia (všeobecne):
+• Ak sa objaví zhoršenie stavu, silná bolesť, krvácanie, horúčka alebo neobvyklé príznaky, kontaktuj lekára.
+• Ak niečomu nerozumieš, over si to u svojho lekára – toto je len pomocné vysvetlenie.",
+    E: "Lieky (orientačne vytiahnuté zo správy):
+" + (meds.length ? meds.map(x=>"• "+x).join("
+") : "• Nenašli sa jasné riadky s dávkovaním. V tejto verzii pridaj lieky ručne.")
+  };
+
+  return { summary, modules };
+}
+function init(){
+  const {profiles, active} = loadProfiles();
+  STATE.profiles = profiles;
+  STATE.activeProfile = active;
+  STATE.data = loadData(active);
+
+  renderProfiles();
+  setTab("home");
+
+  document.querySelectorAll(".tab").forEach(btn=> btn.addEventListener("click", ()=> setTab(btn.dataset.tab)));
+
+  $("#profileSelect").addEventListener("change", (e)=>{
+    STATE.activeProfile = e.target.value;
+    localStorage.setItem("zz_activeProfile", STATE.activeProfile);
+    STATE.data = loadData(STATE.activeProfile);
+    renderKPIs();
+    if(STATE.tab==="reports") renderReports();
+    if(STATE.tab==="meds") renderMeds();
+    if(STATE.tab==="visits") renderVisits();
+  });
+
+  $("#btnManageProfiles").addEventListener("click", manageProfiles);
+  $("#btnAddReport").addEventListener("click", showAddReport);
+  $("#btnAddReport2").addEventListener("click", showAddReport);
+  $("#btnExplain").addEventListener("click", openReportPickerForExplain);
+  $("#btnAddMed").addEventListener("click", showAddMed);
+  $("#btnAddMed2").addEventListener("click", showAddMed);
+  $("#btnAddVisit").addEventListener("click", ()=> showAddVisit());
+  $("#btnAddVisit2").addEventListener("click", ()=> showAddVisit());
+
+  $("#btnExport").addEventListener("click", exportBackup);
+  $("#btnReset").addEventListener("click", resetProfileData);
+
+  $("#btnClose").addEventListener("click", closeModal);
+  $("#modalWrap").addEventListener("click", (e)=>{ if(e.target.id==="modalWrap") closeModal(); });
+
+  $("#specFilter").addEventListener("change", renderReports);
+  $("#searchReports").addEventListener("input", renderReports);
+}
+document.addEventListener("DOMContentLoaded", init);
+
+</script>
+</body>
+</html>
