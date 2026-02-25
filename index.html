@@ -1089,7 +1089,8 @@ async function ocrFromDataUrl(dataUrl, onProgress){
 
 // --- RULE-BASED „ZROZUMITEĽNE“ (bez AI) ---
 function normalizeText(t){
-  return (t||"").replace(//g,"").replace(/[ 	]+
+  return (t||"").replace(/
+/g,"").replace(/[ 	]+
 /g,"
 ").replace(/
 {3,}/g,"
