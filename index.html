@@ -595,7 +595,7 @@ function openReportPickerForExplain(){
     ? [...STATE.data.reports].sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).slice(0,50).map(r=>(
         `<option value="${r.id}">${escapeHtml(reportTitle(r))}</option>`
       )).join("\n")
-    : `<option value="">(zatIAľ nemáš uložené správy)</option>`;
+    : `<option value="">(zatIAľ nemáš uložené správy)</option>;
 
   openModal(
     "Správa zrozumiteľne",
