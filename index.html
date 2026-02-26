@@ -795,7 +795,7 @@ $("#btnSimple").addEventListener("click", ()=>{
   });
 $("#btnMedsFrom").addEventListener("click", ()=> alert("V tejto verzii je vytiahnutie liekov bez AI. Pridaj liek ručne cez + Pridať liek."));
   $("#btnAddVisitFrom").addEventListener("click", ()=> showAddVisit({ specialty: r.specialty || "", title: "Kontrola", date: r.date || todayISO(), note: "" }));
-}
+}//         
 function showAddMed(){
   openModal("Pridať liek", "Jednoduchý zápis do histórie liekov.", `
     <div class="row">
