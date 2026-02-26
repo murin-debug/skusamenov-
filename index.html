@@ -806,18 +806,26 @@ function showAddMed(){
       <button class="btn primary big block" id="btnSaveMed" type="button">Uložiť</button>
     </div>
   `);
+
   $("#btnSaveMed").addEventListener("click", ()=>{
-    const rec = { id: uid(), name: ($("#mName").value||"").trim(), dose: ($("#mDose").value||"").trim(), until: ($("#mUntil").value||"").trim(), note: ($("#mNote").value||"").trim(), createdAt: Date.now() };
+    const rec = {
+      id: uid(),
+      name: ($("#mName").value || "").trim(),
+      dose: ($("#mDose").value || "").trim(),
+      until: ($("#mUntil").value || "").trim(),
+      note: ($("#mNote").value || "").trim()
+    };
+
     STATE.data.meds.push(rec);
     saveData(STATE.activeProfile, STATE.data);
-    closeModal(); setTab("meds");
+    closeModal();
+    setTab("meds");
   });
-}
-
+}        
 function editMed(id){
   const m = STATE.data.meds.find(x=>x.id===id);
   if(!m) return;
-  openModal("Upraviť liek", "", `
+  openModal("Upraviť liek", "", `          
     <div class="row">
       <input id="mName" type="text" value="${escapeHtml(m.name)}">
       <input id="mDose" type="text" value="${escapeHtml(m.dose)}">
