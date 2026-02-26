@@ -594,14 +594,15 @@ function openReportPickerForExplain(){
   const options = hasReports
     ? [...STATE.data.reports].sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).slice(0,50).map(r=>(
         `<option value="${r.id}">${escapeHtml(reportTitle(r))}</option>`
-      )).join("")
+      )).join("\n")
     : `<option value="">(zatIAľ nemáš uložené správy)</option>`;
 
-  openModal("Správa zrozumiteľne",
+  openModal(
+    "Správa zrozumiteľne",
     "Vyber zdroj správy. Odporúčame: odfotiť alebo vybrať súbor.",
     `
       <div class="row">
-        <div class="twocol">
+        </div>
           <button class="btn primary big block" id="exTakePhoto" type="button">📷 Odfotiť</button>
           <button class="btn big block" id="exPickFile" type="button">📎 Vybrať súbor</button>
         </div>
@@ -1085,8 +1086,8 @@ function normalizeText(t){
 
 
 function pickLines(t, rx, max=12){
-  const lines = normalizeText(t).split("
-").map(x=>x.trim()).filter(Boolean);
+  const lines = normalizeText(t).split("\n).map(x=>x.trim()).filter(Boolean);
+
   const out = [];
   for(const ln of lines){
     if(rx.test(ln)){ out.push(ln); if(out.length>=max) break; }
@@ -1095,14 +1096,12 @@ function pickLines(t, rx, max=12){
 }
 
 function extractSectionByKeywords(t, keywords){
-  const lines = normalizeText(t).split("
-");
+  const lines = normalizeText(t).split("\n");
   const lower = lines.map(x=>x.toLowerCase());
   const idx = lower.findIndex(l=>keywords.some(k=>l.includes(k)));
   if(idx<0) return "";
   // vezmeme pár riadkov po nadpise
-  const chunk = lines.slice(idx, idx+10).join("
-").trim();
+  const chunk = lines.slice(idx, idx+10).join("\n").trim();
   return chunk;
 }
 
