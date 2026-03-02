@@ -1202,8 +1202,43 @@ function init(){
   $("#btnManageProfiles").addEventListener("click", manageProfiles);
   $("#btnAddReport").addEventListener("click", showAddReport);
   $("#btnAddReport2").addEventListener("click", showAddReport);
-  $("#btnExplain").addEventListener("click", openReportPickerForExplain);
-  $("#btnAddMed").addEventListener("click", showAddMed);
+ $("#btnOpenExplain").addEventListener("click", async () => {
+
+ const r = await get(STORES.reports, currentReportId);
+
+ if (!r || !r.ocrText) {
+   toast("Najprv spravte Prepis (OCR)");
+   return;
+ }
+
+ openModal("Analyzujem správu...", `<div>Prebieha AI analýza...</div>`);
+
+ try {
+   const response = await fetch("/api/analyze", {
+     method: "POST",
+     headers: { "Content-Type": "application/json" },
+     body: JSON.stringify({ text: r.ocrText })
+   });
+
+   if (!response.ok) throw new Error("AI request failed");
+
+   const aiResult = await response.json();
+
+   closeModal();
+
+   openModal("Správa zrozumiteľne", `
+     <textarea readonly style="width:100%;height:200px;">
+${aiResult.simpleExplanation || "Žiadna odpoveď"}
+     </textarea>
+   `);
+
+ } catch (err) {
+   closeModal();
+   toast("AI analýza zlyhala");
+   console.error(err);
+ }
+
+});  $("#btnAddMed").addEventListener("click", showAddMed);
   $("#btnAddMed2").addEventListener("click", showAddMed);
   $("#btnAddVisit").addEventListener("click", ()=> showAddVisit());
   $("#btnAddVisit2").addEventListener("click", ()=> showAddVisit());
